@@ -71,10 +71,6 @@ hc_run(){
 	then
 		echo -e "[-] Interface not mentioned in config file."
 		exit 0
-	elif [[ `sudo aireplay-ng --test $interface 2>&1` != *"Injection is working"* ]]
-	then
-		echo -e "[-] Could not set wireless adapter to monitor mode."
-		exit 0
 	fi
 
 	tput civis
