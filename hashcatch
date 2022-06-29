@@ -152,7 +152,7 @@ hc_run(){
         echo "$bssid,$essid" >> $f_db
 			else
 				rm $handshake_file
-				rm "/tmp/hc_captures/$bssid-*.cap"
+				rm "/tmp/hc_captures/$bssid-01.cap"
 			fi
 		done
 
