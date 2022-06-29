@@ -26,13 +26,14 @@ ctrl_c(){
 
 banner(){
 	echo -e "${RED}"
-	echo " __   __  _______  _______  __   __  _______  _______  _______  _______  __   __ "; sleep 0.2
-	echo "|  | |  ||   _   ||       ||  | |  ||       ||   _   ||       ||       ||  | |  |"; sleep 0.2
-	echo "|  |_|  ||  |_|  ||  _____||  |_|  ||       ||  |_|  ||_     _||       ||  |_|  |"; sleep 0.2
-	echo "|       ||       || |_____ |       ||       ||       |  |   |  |       ||       |"; sleep 0.2
-	echo "|       ||       ||_____  ||       ||      _||       |  |   |  |      _||       |"; sleep 0.2
-	echo "|   _   ||   _   | _____| ||   _   ||     |_ |   _   |  |   |  |     |_ |   _   |"; sleep 0.2
-	echo "|__| |__||__| |__||_______||__| |__||_______||__| |__|  |___|  |_______||__| |__|"; sleep 0.2
+	echo " __   __  _______  _______  __   __  _______  _______  _______  _______  __   __ "; 
+	echo "|  | |  ||   _   ||       ||  | |  ||       ||   _   ||       ||       ||  | |  |";
+	echo "|  |_|  ||  |_|  ||  _____||  |_|  ||       ||  |_|  ||_     _||       ||  |_|  |"; 
+	echo "|       ||       || |_____ |       ||       ||       |  |   |  |       ||       |"; 
+	echo "|       ||       ||_____  ||       ||      _||       |  |   |  |      _||       |"; 
+	echo "|   _   ||   _   | _____| ||   _   ||     |_ |   _   |  |   |  |     |_ |   _   |"; 
+	echo "|__| |__||__| |__||_______||__| |__||_______||__| |__|  |___|  |_______||__| |__|"; 
+  echo "fix version"
 	echo -en "\n${NC}"
 }
 
@@ -246,7 +247,7 @@ hc_run(){
 		#echo "[*] Reading stations"
 		while read -r line; do bssid=$(echo $line | awk -F ',' '{print $1}'); essid=$(echo $line | awk -F',' '{print $14}'); channel=$(echo $line | awk -F',' '{print $4}'); echo $bssid,$essid,$channel; done < /tmp/hc_out-01.csv | grep -iE "([0-9A-F]{2}[:-]){5}([0-9A-F]{2}), [-a-zA-Z0-9_ !]+, ([0-9]{1,2})" > /tmp/hc_stations.tmp
 
-		#echo "[*] Clearing temp files"
+		echo "[*] Clearing temp files"
 		rm /tmp/hc_out*
 
 		readarray stations < /tmp/hc_stations.tmp
@@ -281,31 +282,19 @@ hc_run(){
 			echo -en "\rStatus: ${YELLOW}Listening for handshake${NC}"
 			while [ true ]; do echo -en "${YELLOW}"; spin; echo -en "${NC}"; done &
 			echo -en "\033[2C"
-			timeout --foreground 10s airodump-ng -w /tmp/hc_captures/"$bssid" --output-format pcap --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
+			timeout --foreground 10s airodump-ng -w /tmp/hc_captures/"$bssid" --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
 			echo -en "${NC}"
 			kill $! &> /dev/null
 			echo -en "\033[3B"
 			echo -en "\r"
-			cap2hccapx "/tmp/hc_captures/$bssid-01.cap" "/tmp/hc_handshakes/$bssid.hccapx" &> /dev/null
-			hashflag=`wlanhcxinfo -i "/tmp/hc_handshakes/$bssid.hccapx" 2>&1`
-			if [[ $hashflag == *"0 records loaded"* ]]
+      handshake_file="/tmp/hc_captures/$bssid-01.cap"
+			if ! [ -s $handshake_file ]
 			then
-				rm "/tmp/hc_handshakes/$bssid.hccapx" &> /dev/null
-				rm "/tmp/hc_captures/$bssid-01.cap" &> /dev/null
+				rm "/tmp/hc_captures/$bssid-01.cap" 
 			else
-				cp "/tmp/hc_handshakes/$bssid.hccapx" "$d_handshakes/$bssid.hccapx" &> /dev/null
+				cp $handshake_file "$d_handshakes/$bssid.cap" 
 				((hs_count++))
-				loc_data="`curl -s "https://api.mylnikov.org/geolocation/wifi?v=1.2&bssid=$bssid"`"
-				if [ "`echo $loc_data`" ]
-				then
-					loc_lat="`echo $loc_data | jq .data.lat`"
-					loc_lon="`echo $loc_data | jq .data.lon`"
-					loc_range="`echo $loc_data | jq .data.range`"
-					loc_time="`echo $loc_data | jq .data.time`"
-					echo "$bssid,$essid,$loc_lat,$loc_lon,$loc_range,$loc_time" >> $f_db
-				else
-					echo "$bssid,$essid" >> $f_db
-				fi
+        echo "$bssid,$essid" >> $f_db
 			fi
 		done
 
