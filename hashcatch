@@ -92,7 +92,7 @@ hc_run(){
 		echo -en "\rStatus: ${YELLOW}Scanning for WiFi networks${NC}"
 		echo -en "\033[2C"
 		while [ true ]; do echo -en "${YELLOW}"; spin; echo -en "${NC}"; done &
-		timeout --foreground 3 airodump-ng "$interface" -t wpa -w /tmp/hc_out --output-format csv &> /dev/null
+		timeout --foreground 60s airodump-ng "$interface" -t wpa -w /tmp/hc_out --output-format csv &> /dev/null
 		echo -en "${NC}"
 		kill $! &> /dev/null
 		echo -en "\033[1B"
@@ -100,7 +100,7 @@ hc_run(){
 		echo -en "\033[2B"
 		echo -en "\r"
 
-		#echo "[*] Reading stations"
+		echo "[*] Reading stations"
 		while read -r line; do bssid=$(echo $line | awk -F ',' '{print $1}'); essid=$(echo $line | awk -F',' '{print $14}'); channel=$(echo $line | awk -F',' '{print $4}'); echo $bssid,$essid,$channel; done < /tmp/hc_out-01.csv | grep -iE "([0-9A-F]{2}[:-]){5}([0-9A-F]{2}), [-a-zA-Z0-9_ !]+, ([0-9]{1,2})" > /tmp/hc_stations.tmp
 
 		echo "[*] Clearing temp files"
@@ -138,7 +138,7 @@ hc_run(){
 			echo -en "\rStatus: ${YELLOW}Listening for handshake${NC}"
 			while [ true ]; do echo -en "${YELLOW}"; spin; echo -en "${NC}"; done &
 			echo -en "\033[2C"
-			timeout --foreground 60s airodump-ng -w /tmp/hc_captures/"$bssid" --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
+			timeout --foreground 60s airodump-ng -w "/tmp/hc_captures/$bssid" --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
 			echo -en "${NC}"
 			kill $! &> /dev/null
 			echo -en "\033[3B"
