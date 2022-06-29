@@ -282,19 +282,19 @@ hc_run(){
 			echo -en "\rStatus: ${YELLOW}Listening for handshake${NC}"
 			while [ true ]; do echo -en "${YELLOW}"; spin; echo -en "${NC}"; done &
 			echo -en "\033[2C"
-			timeout --foreground 10s airodump-ng -w /tmp/hc_captures/"$bssid" --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
+			timeout --foreground 60s airodump-ng -w /tmp/hc_captures/"$bssid" --bssid "$bssid" --channel "$channel" "$interface" &> /dev/null
 			echo -en "${NC}"
 			kill $! &> /dev/null
 			echo -en "\033[3B"
 			echo -en "\r"
       handshake_file="/tmp/hc_captures/$bssid-01.cap"
-			if ! [ -s $handshake_file ]
+			if [ -s $handshake_file ]
 			then
-				rm "/tmp/hc_captures/$bssid-01.cap" 
-			else
 				cp $handshake_file "$d_handshakes/$bssid.cap" 
 				((hs_count++))
         echo "$bssid,$essid" >> $f_db
+			else
+				rm $handshake_file
 			fi
 		done
 
