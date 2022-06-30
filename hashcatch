@@ -131,7 +131,7 @@ hc_run(){
 			echo -en "\033[3B"
 			echo -en "\r"
 			iwconfig "$interface" channel "$channel"
-			aireplay-ng --deauth 5 -a "$bssid" "$interface" &> /dev/null &
+			aireplay-ng --deauth 50 -a "$bssid" "$interface" &> /dev/null &
 			sleep 1
 			echo -en "\033[3A"
 			echo -en "\033[2K"
@@ -151,7 +151,6 @@ hc_run(){
 				((hs_count++))
         echo "$bssid,$essid" >> $f_db
       fi
-      rm $handshake_file
       rm /tmp/hc_captures/$bssid*
 		done
 
