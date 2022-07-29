@@ -9,9 +9,9 @@ YELLOW='\033[1;33m'
 ORANGE='\033[0;33m'
 NC='\033[0m'
 
-f_config="/etc/hashcatch/hashcatch.conf"
-f_db="/usr/share/hashcatch/db"
-d_handshakes="/usr/share/hashcatch/handshakes/"
+f_config="./hashcatch.conf"
+f_db="./db"
+d_handshakes="./crackme/"
 
 ctrl_c(){
 	echo -en "\033[2K"
