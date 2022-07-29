@@ -115,6 +115,9 @@ hc_run(){
 		do
 			bssid=`echo "$station" | awk -F',' '{print $1}' | sed -e 's/^[" "]*//'`
 			essid=`echo "$station" | awk -F',' '{print $2}' | sed -e 's/^[" "]*//'`
+      if [ -s "$d_handshakes$bssid-$essid"]; then
+        continue
+      fi
 			channel=`echo "$station" | awk -F',' '{print $3}' | sed -e 's/^[" "]*//'`
 			if [[ "`grep -i 'ignore' $f_config | awk -F'=' '{print $2}'`" == *"$essid"* ]] || [[ "`grep "$bssid" $f_db`" ]]
 			then
@@ -147,9 +150,8 @@ hc_run(){
       cap2hccapx "/tmp/hc_captures/$bssid-01.cap" $handshake_file
 			if [ -s $handshake_file ]
 			then
-        cp $handshake_file "$d_handshakes/${bssid}-$(date +'%s').hccapx" 
+        cp $handshake_file "$d_handshakes/${bssid}-${essid}.hccapx" 
 				((hs_count++))
-        echo "$bssid,$essid" >> $f_db
       fi
       rm /tmp/hc_captures/$bssid*
 		done
