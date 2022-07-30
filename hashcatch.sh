@@ -114,7 +114,7 @@ hc_run(){
 		do
 			bssid=`echo "$station" | awk -F',' '{print $1}' | sed -e 's/^[" "]*//'`
 			essid=`echo "$station" | awk -F',' '{print $2}' | sed -e 's/^[" "]*//'`
-      if [ -s "$d_handshakes$bssid-$essid"]; then
+      if [ -s "$d_handshakes$bssid-$essid" ]; then
         continue
       fi
 			channel=`echo "$station" | awk -F',' '{print $3}' | sed -e 's/^[" "]*//'`
