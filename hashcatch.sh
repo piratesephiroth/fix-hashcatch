@@ -72,6 +72,10 @@ hc_run(){
 		exit 0
 	fi
 
+	if [ ! -d "$d_handshakes" ];then
+		mkdir "$d_handshakes"
+    	fi
+     
 	tput civis
 	
 	banner
@@ -114,10 +118,14 @@ hc_run(){
 		do
 			bssid=`echo "$station" | awk -F',' '{print $1}' | sed -e 's/^[" "]*//'`
 			essid=`echo "$station" | awk -F',' '{print $2}' | sed -e 's/^[" "]*//'`
-      if [ -s "$d_handshakes$bssid-$essid" ]; then
-        continue
-      fi
+			if [ -s "$d_handshakes$bssid-$essid" ]; then
+				continue
+			fi
 			channel=`echo "$station" | awk -F',' '{print $3}' | sed -e 's/^[" "]*//'`
+   			if [[ ! "`grep -i 'focus' $f_config | awk -F'=' '{print $2}'`" == *"$essid"* ]]
+			then
+				continue
+			fi
 			((ap_count++))
 			echo -en "\033[2A"
 			echo -en "\033[2K"
@@ -141,14 +149,14 @@ hc_run(){
 			kill $! &> /dev/null
 			echo -en "\033[3B"
 			echo -en "\r"
-      handshake_file="/tmp/hc_captures/$bssid.hccapx"
-      cap2hccapx "/tmp/hc_captures/$bssid-01.cap" $handshake_file
+			handshake_file="/tmp/hc_captures/$bssid.hccapx"
+			cap2hccapx "/tmp/hc_captures/$bssid-01.cap" $handshake_file
 			if [ -s $handshake_file ]
 			then
-        cp $handshake_file "$d_handshakes/${bssid}-${essid}.hccapx" 
+				cp $handshake_file "$d_handshakes/${bssid}-${essid}.hccapx" 
 				((hs_count++))
-      fi
-      rm /tmp/hc_captures/$bssid*
+			fi
+			rm /tmp/hc_captures/$bssid*
 		done
 
 		if [[ $ap_count == 0 ]]
