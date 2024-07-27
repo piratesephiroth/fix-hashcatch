@@ -39,7 +39,7 @@ Written by [@SivaneshAshok](https://twitter.com/sivaneshashok)
 #### The Configuration file
 * The configuration file can be found in /etc/hashcatch/hashcatch.conf
 * You can later edit the "interface" field to set the interface of your choice
-* You can also add an "ignore" field to mention the WiFi networks you want hashcatch to ignore while running
+* You can also add a "focus" field to mention the specifc WiFi networks you want hashcatch to target
 * Refer the example given below to know about the format in which entries should be added to the configuration file
 * Format ```option name=option1,option2,option3```
 * No space in between option name, equal sign and options
