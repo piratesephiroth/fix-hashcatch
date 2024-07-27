@@ -73,7 +73,7 @@ hc_run(){
 	fi
 
 	if [ ! -d "$d_handshakes" ];then
-		mkdir "$d_handshakes"
+		mkdir -m777 "$d_handshakes"
     	fi
      
 	tput civis
