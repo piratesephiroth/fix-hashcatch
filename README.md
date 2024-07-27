@@ -33,15 +33,8 @@ Written by [@SivaneshAshok](https://twitter.com/sivaneshashok)
 ```hashcatch --help``` to print the help screen
 
 * Hashcatch runs indefinitely until keyboard interrupt
-* Handshakes captured will be stored in */usr/share/hashcatch/handshakes/*
-* The captured WiFi network's BSSID and ESSID will be added to */usr/share/hashcatch/db*
+* Handshakes captured will be stored in */crackme*
 * If you're targeting a wifi network, spend around 20 to 30 seconds within the wifi's range to ensure handshake capture
-* [Experimental] If you are connected to the internet while capturing, the following data will also be added to the db file
-  * latitude
-  * longitude
-  * signal radius
-  * time of record
-  * Note: Kudos to [Alexander Mylnikov](https://www.mylnikov.org) for the API he's running that returns the location details of a router's MAC address using public databases
 
 #### The Configuration file
 * The configuration file can be found in /etc/hashcatch/hashcatch.conf
@@ -53,12 +46,8 @@ Written by [@SivaneshAshok](https://twitter.com/sivaneshashok)
 * Example
 ```
 interface=wlan0
-ignore=Google Starbucks,AndroidAP
+focus=Google Starbucks,AndroidAP
 ```
-
-#### Features to be added
-* More location features
-* Automatic upload to websites to start cracking the handshake
 
 #### Known Issues
 1. [OSX] From issues raised by users, it seems airodump-ng is not working properly in OSX. Since it is a dependency for hashcatch, OSX users might not be able to run hashcatch.
